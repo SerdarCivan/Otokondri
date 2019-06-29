@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+
+using Excel = Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Excel;
 namespace Otokondri
 {
     public partial class PersonelEkleSil : Form
@@ -25,13 +28,16 @@ namespace Otokondri
 
         private void PersonelEkleSil_Load(object sender, EventArgs e)
         {
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             SqlConnection con = new SqlConnection("Data Source=DESKTOP-7L6TOHU;Initial Catalog=OtokondriOtomasyon;Persist Security Info=True;User ID=sa;Password=123456789");
             con.Open();
             SqlDataAdapter adapter = new SqlDataAdapter("Select Id,Ad,Soyad,TCKN,Parola,Cinsiyet,Yetki,Email from tbl_Personel", con);
-            DataTable dtable = new DataTable();
+            System.Data.DataTable dtable = new System.Data.DataTable();
             adapter.Fill(dtable);
             dataGridView_PersonelSil.DataSource = dtable;
             con.Close();
+            this.dataGridView_PersonelSil.Columns["Id"].Visible = false;
+            this.dataGridView_PersonelSil.Columns["Parola"].Visible = false;
         }
 
         private void btn_PersonelEkle_Click(object sender, EventArgs e)
@@ -62,18 +68,25 @@ namespace Otokondri
                     {
                         yetki = "Y";
                     }
+                    if (textBox_Email.Text == "" || textBox_PersonelAd.Text == "" || textBox_PersonelParola.Text == "" || textBox_PersonelSoyad.Text == ""||textBox_TCKN.Text=="")
+                    {
+                        MessageBox.Show("Alanlar boş olamaz.");
+                    }
+                    else
+                    {
+                        string sql = "insert into tbl_Personel(Ad,Soyad,TCKN,Parola,Yetki,Cinsiyet,Email) values('" + textBox_PersonelAd.Text + "','" + textBox_PersonelSoyad.Text + "','" + textBox_TCKN.Text + "','" + textBox_PersonelParola.Text + "','" + yetki + "','" + cinsiyett + "','" + textBox_Email.Text + "')";
+                        SqlConn.Islemler(sql);
+
+                        SqlConnection con = new SqlConnection("Data Source=DESKTOP-7L6TOHU;Initial Catalog=OtokondriOtomasyon;Persist Security Info=True;User ID=sa;Password=123456789");
+                        con.Open();
+                        SqlDataAdapter adapter = new SqlDataAdapter("Select * from tbl_Personel", con);
+                        System.Data.DataTable dtable = new System.Data.DataTable();
+                        adapter.Fill(dtable);
+                        dataGridView_PersonelSil.DataSource = dtable;
+                        con.Close();
+                    }
+
                     
-
-                    string sql = "insert into tbl_Personel(Ad,Soyad,TCKN,Parola,Yetki,Cinsiyet,Email) values('" + textBox_PersonelAd.Text + "','" + textBox_PersonelSoyad.Text + "','" + textBox_TCKN.Text + "','" + textBox_PersonelParola.Text + "','" + yetki + "','" + cinsiyett + "','"+textBox_Email.Text+"')";
-                    SqlConn.Islemler(sql);
-
-                    SqlConnection con = new SqlConnection("Data Source=DESKTOP-7L6TOHU;Initial Catalog=OtokondriOtomasyon;Persist Security Info=True;User ID=sa;Password=123456789");
-                    con.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter("Select * from tbl_Personel", con);
-                    DataTable dtable = new DataTable();
-                    adapter.Fill(dtable);
-                    dataGridView_PersonelSil.DataSource = dtable;
-                    con.Close();
                 }
                 else
                 {
@@ -131,6 +144,62 @@ namespace Otokondri
         {
             checkBox_AlisDep.Checked = false;
             checkBox_Yonetici.Checked = false;
+        }
+
+
+        void excele_aktar(DataGridView dg)
+        {
+            dg.AllowUserToAddRows = false;
+            System.Globalization.CultureInfo dil = System.Threading.Thread.CurrentThread.CurrentCulture;
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-us");
+            Microsoft.Office.Interop.Excel.Application Tablo = new Microsoft.Office.Interop.Excel.Application();
+            Microsoft.Office.Interop.Excel.Workbook kitap = Tablo.Workbooks.Add(true);
+            Microsoft.Office.Interop.Excel.Worksheet sayfa = (Microsoft.Office.Interop.Excel.Worksheet)Tablo.ActiveSheet;
+            System.Threading.Thread.CurrentThread.CurrentCulture = dil;
+            Tablo.Visible = true;
+            sayfa = (Worksheet)kitap.ActiveSheet;
+            for (int i = 0; i < dg.Rows.Count; i++)
+            {
+                for (int j = 0; j < dg.ColumnCount; j++)
+                {
+                    if (i == 0)
+                    {
+                        Tablo.Cells[1, j + 1] = dg.Columns[j].HeaderText;
+                    }
+                    Tablo.Cells[i + 2, j + 1] = dg.Rows[i].Cells[j].Value.ToString();
+                }
+            }
+            Tablo.Visible = true;
+            Tablo.UserControl = true;
+        }
+
+        private void button_excel_aktar_Click(object sender, EventArgs e)
+        {
+            Excel.Application excel = new Excel.Application();
+            excel.Visible = true;
+            object Missing = Type.Missing;
+            Workbook workbook = excel.Workbooks.Add(Missing);
+            Worksheet sheet1 = (Worksheet)workbook.Sheets[1];
+            int StartCol = 1;
+            int StartRow = 1;
+            for (int j = 0; j < dataGridView_PersonelSil.Columns.Count; j++)
+            {
+                Range myRange = (Range)sheet1.Cells[StartRow, StartCol + j];
+                myRange.Value2 = dataGridView_PersonelSil.Columns[j].HeaderText;
+            }
+            StartRow++;
+            for (int i = 0; i < dataGridView_PersonelSil.Rows.Count; i++)
+            {
+                for (int j = 0; j < dataGridView_PersonelSil.Columns.Count; j++)
+                {
+
+                    Range myRange = (Range)sheet1.Cells[StartRow + i, StartCol + j];
+                    myRange.Value2 = dataGridView_PersonelSil[j, i].Value == null ? "" : dataGridView_PersonelSil[j, i].Value;
+                    myRange.Select();
+
+
+                }
+            }
         }
     }
 }
