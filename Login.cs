@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -35,7 +35,7 @@ namespace Otokondri
 
         private void Login_Load(object sender, EventArgs e)
         {
-            
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         public string yetki;
