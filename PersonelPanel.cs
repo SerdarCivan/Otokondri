@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,13 +17,27 @@ namespace Otokondri
             InitializeComponent();
         }
        public string personelid;
+       public string perid;
         private void PersonelPanel_Load(object sender, EventArgs e)
         {
-           string islem = "select Yetki from tbl_Personel where Email='"+personelid+"'";
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            string islem = "select Yetki from tbl_Personel where Email='"+personelid+"'";
             DataTable tbl = SqlConn.goster(islem);
-            if (tbl.Rows[0]["Yetki"].ToString() == "AD" || tbl.Rows[0]["Yetki"].ToString() == "SD")
+
+            perid = tbl.Rows[0]["Yetki"].ToString();
+
+            if (tbl.Rows[0]["Yetki"].ToString() == "AD" )
             {
                 button_PersonelIslemleri.Visible = false;
+                button_Raporlar.Visible = false;
+
+            }
+            if (tbl.Rows[0]["Yetki"].ToString() == "SD")
+            {
+                button_PersonelIslemleri.Visible = false;
+                button_AracEkleSil.Visible = false;
+                button_Raporlar.Visible = false;
             }
         }
 
@@ -42,6 +56,7 @@ namespace Otokondri
         private void button_AracDetayDuzenle_Click(object sender, EventArgs e)
         {
             AracDetayDuzenle AracDetayDuzenle = new AracDetayDuzenle();
+            AracDetayDuzenle.personelid = perid;
             AracDetayDuzenle.Show();
         }
 
@@ -60,6 +75,12 @@ namespace Otokondri
             {
                 Application.Exit();
             }
+        }
+
+        private void button_Raporlar_Click(object sender, EventArgs e)
+        {
+            Raporlar Raporlar = new Raporlar();
+            Raporlar.Show();
         }
     }
 }
