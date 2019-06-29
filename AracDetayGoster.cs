@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +20,7 @@ namespace Otokondri
         DataTable dtable;
         private void AracDetayGoster_Load(object sender, EventArgs e)
         {
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             SqlConnection con = new SqlConnection("Data Source=DESKTOP-7L6TOHU;Initial Catalog=OtokondriOtomasyon;Persist Security Info=True;User ID=sa;Password=123456789");
             con.Open();
             SqlDataAdapter adapter = new SqlDataAdapter("Select Id,Marka, Model,Detay_Ozellik from tbl_Arac", con);
