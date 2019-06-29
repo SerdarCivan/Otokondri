@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,7 +26,7 @@ namespace Otokondri
 
         private void SifremiUnuttum_Load(object sender, EventArgs e)
         {
-            
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         private void btn_SifremiUnuttumGerii_Click(object sender, EventArgs e)
