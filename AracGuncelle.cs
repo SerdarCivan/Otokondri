@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,6 +26,10 @@ namespace Otokondri
         public string alistarihi;
         public string satistarihi;
         public string plaka;
+        public string satis_durum;
+
+        public string personelid;
+        
 
         public string uzanti1;
         public string uzanti2;
@@ -35,6 +39,18 @@ namespace Otokondri
         public DataTable resimtable;
         private void AracGuncelle_Load(object sender, EventArgs e)
         {
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            if (personelid == "AD")
+            {
+                btn_Sil.Visible = false;
+
+            }
+            if (personelid == "SD")
+            {
+                btn_Sil.Visible = false;
+            }
+
             try
             {
                 if (resimtable.Rows.Count>0)
@@ -56,12 +72,14 @@ namespace Otokondri
                 textBox_SatisFiyati.Text = satisfiyati;
                 textBox_Plaka.Text = plaka;
                 textBox_id.Text = id;
+                textBox_SatisDurum.Text = satis_durum;
                 dateTime_AlisTarihi.Value = Convert.ToDateTime(alistarihi);
                 dateTime_SatisTarihi.Value = Convert.ToDateTime(satistarihi);
                 
             }
             catch (Exception)
             {
+                
                 if (resimtable.Rows.Count > 0)
                 {
                   uzanti1 = resimtable.Rows[0]["Fotograf_Uzanti"].ToString();
@@ -81,6 +99,7 @@ namespace Otokondri
                 textBox_SatisFiyati.Text = satisfiyati;
                 textBox_Plaka.Text = plaka;
                 textBox_id.Text = id;
+                textBox_SatisDurum.Text = satis_durum;
                 dateTime_AlisTarihi.Value = Convert.ToDateTime(alistarihi);
             }
 
@@ -153,7 +172,7 @@ namespace Otokondri
                     string deneme = textBox_Plaka.Text;
                    
 
-                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='"+ yeniad + "',Arac_Id='"+textBox_id.Text+"',Sira='"+1+"',ProfilFotograf='"+1+ "' where Sira='"+1+"'";
+                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='"+ yeniad + "',Arac_Id='"+textBox_id.Text+"',Sira='"+1+"',ProfilFotograf='"+1+ "' where Sira='"+1+ "' and Arac_Id='" + textBox_id.Text + "'";
                     SqlConn.Islemler(fotografinsert);
                     File.Copy(kaynak, hedef + yeniad);
                 }
@@ -171,7 +190,7 @@ namespace Otokondri
                     string kaynak = dosyayolu2;
                     yeniad = textBox_Plaka.Text + "_2.jpg";
 
-                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='" + yeniad + "',Arac_Id='" + textBox_id.Text + "',Sira='" + 2 + "' where Sira='" + 2 + "'";
+                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='" + yeniad + "',Arac_Id='" + textBox_id.Text + "',Sira='" + 2 + "' where Sira='" + 2 + "' and Arac_Id='" + textBox_id.Text + "'";
                     SqlConn.Islemler(fotografinsert);
                     File.Copy(kaynak, hedef + yeniad);
                 }
@@ -191,13 +210,14 @@ namespace Otokondri
                     string kaynak = dosyayolu3;
                     yeniad = textBox_Plaka.Text + "_3.jpg";
 
-                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='" + yeniad + "',Arac_Id='" + textBox_id.Text + "',Sira='" + 3 + "' where Sira='" + 3 + "'";
+                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='" + yeniad + "',Arac_Id='" + textBox_id.Text + "',Sira='" + 3 + "' where Sira='" + 3 + "' and Arac_Id='" + textBox_id.Text + "'";
                     SqlConn.Islemler(fotografinsert);
                     File.Copy(kaynak, hedef + yeniad);
                 }
                 //***************************************************************************************
                 if (textBox_FotoUzanti4.Text != uzanti4)
                 {
+
                     //sildik
                     string hedef = Application.StartupPath + @"\photos\";
                     if (System.IO.File.Exists(@hedef + uzanti4))
@@ -209,22 +229,23 @@ namespace Otokondri
                     string kaynak = dosyayolu4;
                     yeniad = textBox_Plaka.Text + "_4.jpg";
 
-                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='" + yeniad + "',Arac_Id='" + textBox_id.Text + "',Sira='" + 4 + "' where where Sira='" + 4 + "'";
+                    string fotografinsert = "update tbl_Fotograf set Fotograf_Uzanti='" + yeniad + "',Arac_Id='" + textBox_id.Text + "',Sira='" + 4 + "'  where Sira='" + 4 + "' and Arac_Id='"+textBox_id.Text+"'";
                     SqlConn.Islemler(fotografinsert);
                     File.Copy(kaynak, hedef + yeniad);
                 }
+
                 
-                string komut = " UPDATE tbl_Arac SET Marka = '" + textBox_Marka.Text + "', Model ='" + textBox_Model.Text + "', Detay_Ozellik = '" + textBox_Detay.Text + "', Alis_Fiyati = '" + textBox_AlisFiyati.Text + "',Satis_Fiyati = '" + textBox_SatisFiyati.Text + "',Alis_Tarihi = '" + dateTime_AlisTarihi.Text + "',Satis_Tarihi = '" + dateTime_SatisTarihi.Text + "',Plaka ='"+textBox_Plaka.Text+"' WHERE Id = '" + textBox_id.Text + "'";
+                string komut = " UPDATE tbl_Arac SET Marka = '" + textBox_Marka.Text + "', Model ='" + textBox_Model.Text + "', Detay_Ozellik = '" + textBox_Detay.Text + "', Alis_Fiyati = '" + textBox_AlisFiyati.Text + "',Satis_Fiyati = '" + textBox_SatisFiyati.Text + "',Alis_Tarihi = '" +dateTime_AlisTarihi.Text+ "',Satis_Tarihi = '" + dateTime_SatisTarihi.Text + "',Plaka ='"+textBox_Plaka.Text+"' WHERE Id = '" + textBox_id.Text + "'";
                 SqlConn.Islemler(komut);
                 MessageBox.Show("Güncelleme başarılı.");
             }
-            catch (Exception)
+            catch (Exception hata)
             {
 
-                MessageBox.Show("Hata!!");
+                MessageBox.Show("Hata!! "+ hata.Message);
             }
             
-        }
+        }   
 
         private void btn_Sil_Click(object sender, EventArgs e)
         {
@@ -276,6 +297,47 @@ namespace Otokondri
             this.Hide();
         }
 
+        private void button_Satildi_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBox_SatisFiyati.Text=="")
+                {
+                    MessageBox.Show("Araç satış bedeli girilmedi!");
+                }
+                else if (Convert.ToInt32(textBox_AlisFiyati.Text)>Convert.ToInt32(textBox_SatisFiyati.Text))
+                {
+                    int hesapla =  Convert.ToInt32(textBox_AlisFiyati.Text) - Convert.ToInt32(textBox_SatisFiyati.Text) ;
+                    string insert="update  tbl_Arac set Zarar='"+hesapla+ "', Kar='"+0+"' where Id = '" + textBox_id.Text + "'";
+                    SqlConn.Islemler(insert);
 
+                    string updatesatis = "update tbl_Arac set Satis_Durumu = 1, Satis_Fiyati ='" + textBox_SatisFiyati.Text + "',Satis_Tarihi = '" + dateTime_SatisTarihi.Text + "' where Id = '" + textBox_id.Text + "'";
+                    SqlConn.Islemler(updatesatis);
+                    MessageBox.Show("Araç satıldı olarak işaretlendi.");
+                }
+                else if (Convert.ToInt32(textBox_AlisFiyati.Text) < Convert.ToInt32(textBox_SatisFiyati.Text))
+                {
+                    int hesapla =  Convert.ToInt32(textBox_SatisFiyati.Text) - Convert.ToInt32(textBox_AlisFiyati.Text)  ;
+                    string insert = "update  tbl_Arac set Kar='" + hesapla + "', Zarar='" + 0 + "' where Id = '" + textBox_id.Text + "'";
+                    SqlConn.Islemler(insert);
+
+                    string updatesatis = "update tbl_Arac set Satis_Durumu = 1, Satis_Fiyati ='" + textBox_SatisFiyati.Text + "',Satis_Tarihi = '" + dateTime_SatisTarihi.Text + "' where Id = '" + textBox_id.Text + "'";
+                    SqlConn.Islemler(updatesatis);
+                    MessageBox.Show("Araç satıldı olarak işaretlendi.");
+                }
+                
+            }
+            catch (Exception hata)
+            {
+
+                MessageBox.Show(hata.Message);
+            }
+            
+        }
+
+        private void dateTime_AlisTarihi_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
