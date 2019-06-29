@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,6 +22,7 @@ namespace Otokondri
 
         private void AracEkleSil_Load(object sender, EventArgs e)
         {
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             SqlConnection con = new SqlConnection("Data Source=DESKTOP-7L6TOHU;Initial Catalog=OtokondriOtomasyon;Persist Security Info=True;User ID=sa;Password=123456789");
             con.Open();
             SqlDataAdapter adapter = new SqlDataAdapter("Select Marka, Model,Detay_Ozellik,Alis_Tarihi,Alis_Fiyati,Satis_Tarihi,Satis_Fiyati from tbl_Arac", con);
