@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,6 +39,7 @@ namespace Otokondri
         public string email;
         private void PersonelGuncelle_Load(object sender, EventArgs e)
         {
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             textBox_Email.Text = email;
             textBox_PersonelAd.Text = ad;
             textBox_PersonelSoyad.Text = soyad;
@@ -69,23 +70,6 @@ namespace Otokondri
             {
                 checkBox_SatisDep.Checked = true;
             }
-
-            //if (checkBox_AlisDep.Checked == true)
-            //{
-            //    checkBox_SatisDep.Checked = false;
-            //    checkBox_Yonetici.Checked = false;
-            //}
-            //if (checkBox_SatisDep.Checked == true)
-            //{
-            //    checkBox_AlisDep.Checked = false;
-            //    checkBox_Yonetici.Checked = false;
-            //}
-            //if (checkBox_Yonetici.Checked == true)
-            //{
-            //    checkBox_AlisDep.Checked = false;
-            //    checkBox_SatisDep.Checked = false;
-            //}
-
         }
 
 
